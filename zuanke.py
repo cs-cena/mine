@@ -164,7 +164,7 @@ if __name__ == '__main__':
         
         start = time.time()
         
-        save_uid = save_uids[0]
+        save_uid = save_uids[0] + 1
         final_uid = save_uids[1]
         
         #赚客吧注册用户info

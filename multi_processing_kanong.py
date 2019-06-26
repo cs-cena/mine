@@ -64,39 +64,39 @@ def kanong(page):
     #print(rq_kn)
     print(page)
     
-    if "清除筛选条件" not in rq_kn:
+    if "老哥必做" not in rq_kn:
         
         selector = etree.HTML(rq_kn)
-        ee = selector.xpath("//span[@class='product-name']/text()")
-        item_name = isempty(ee)
+        ee = selector.xpath("//h2[@class='dk-top-tit']/text()")
+        name = isempty(ee)
 
-        aa = selector.xpath("//div[@class='moreinfo']/table/tbody/tr[1]/td[3]/i/text()")
-        item_term = isempty(aa)
+        aa = selector.xpath("//ul[@class='list-top cf']/li[2]/p[@class='red']/text()")
+        term = isempty(aa)
         
-        bb = selector.xpath("//div[@class='moreinfo']/table/tbody/tr[1]/td[2]/i/text()")
-        item_amount = isempty(bb)
+        bb = selector.xpath("//ul[@class='list-top cf']/li[1]/p[@class='red']/text()")
+        amount = isempty(bb)
         
-        cc = selector.xpath("//div[@class='moreinfo']/table/tbody/tr[2]/td[1]/i/text()")
-        item_cost = isempty(cc)
+        cc = selector.xpath("//ul[@class='list-top cf']/li[3]/p[@class='red']/text()")
+        cost = isempty(cc)
         
-        dd = selector.xpath("//div[@class='moreinfo']/table/tbody/tr[1]/td[1]/i/text()")
-        item_people = isempty(dd)
+        dd = selector.xpath("//ul[@class='list-top cf']/li[4]/p[@class='red']/text()")
+        people = isempty(dd)
         
-        ee = selector.xpath("//div[@class='item']/img/@src")
+        ee = selector.xpath("//img[@class='dk-img']/@src")
         
         if len(ee[0]) < 7 :
-            item_online_time = ["null"]
+            online_time = ["null"]
         else:
             e = ee[0].find("/20")+1               
-            item_online_time = [ee[0][e:e+10]]
+            online_time = [ee[0][e:e+10]]
         
         row  = [
-            item_name[0],
-            item_term[0],
-            item_amount[0],
-            item_cost[0],
-            item_people[0],
-            item_online_time[0],
+            name[0],
+            term[0],
+            amount[0],
+            cost[0],
+            people[0],
+            online_time[0],
             page
         ]
             
@@ -118,7 +118,7 @@ if __name__ == '__main__':
       
     pool = ThreadPool()
     
-    page = (x for x in range(1, 90001))#90001
+    page = (x for x in range(1, 90001))#
     
     try:
         start = time.time()

@@ -93,8 +93,12 @@ def kanong(save_uid, final_uid):
                 kws = ['冻结', '金融传奇', '禁止访问']
                 #用户组
                 if "会员标志" in html:
-                    user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li[2]//a/text()")[0]
-                                                
+                    
+                    if "管理组" in html:
+                        user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li[2]//a/text()")[0]
+                    else:
+                        user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li//a/text()")[0]
+                                                          
                 elif "管理组" in html:
                     user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][2]/ul[1]/li[2]//a/text()")[0]
                                                 
@@ -205,8 +209,8 @@ def kanong(save_uid, final_uid):
         
         
 if __name__ == '__main__':
-    #2019-06-28 kanong 最大uid 1030979 注册时间20190628 14:25
-    save_uids = [23120, 1031001]#1030979 1031001
+    #2019-06-28 卡农 最大uid 1030979 注册时间20190628 14:25
+    save_uids = [23243, 1031001]#1030979 1031001
     
     while True: 
         

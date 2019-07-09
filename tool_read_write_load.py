@@ -89,7 +89,7 @@ def read_json():
 
     today = datetime.date.today()
     
-    with open(r"C:\Users\chensheng\Desktop\%s_%s"%(today, file_name), "r", encoding="utf-8") as f:
+    with open(r"C:\Users\***\Desktop\%s_%s"%(today, file_name), "r", encoding="utf-8") as f:
 
         data = json.load(f)    
         #load是从文件里面load,loads是从str里面load
@@ -98,7 +98,7 @@ def read_json():
 def write_json(file_name,data):    
 
     today = datetime.date.today() 
-    with open(r"C:\Users\chensheng\Desktop\%_%s.json"%(today, file_name), "a", encoding="utf-8") as f:
+    with open(r"C:\Users\***\Desktop\%_%s.json"%(today, file_name), "a", encoding="utf-8") as f:
         
         f.write(json.dumps(data,ensure_ascii=False,indent=4)) 
         
@@ -107,7 +107,7 @@ def write_csv(pt_name, rows):
     
     today = datetime.date.today()
 
-    with open(r"C:\Users\chensheng\Desktop\%s_%s.csv"%(pt_name, today), "a",
+    with open(r"C:\Users\***\Desktop\%s_%s.csv"%(pt_name, today), "a",
               encoding="utf-8-sig", newline='') as f:
         writer = csv.writer(f) 
         writer.writerows(rows)
@@ -117,7 +117,7 @@ def write_txt(file_name, content):
 
     today = datetime.date.today()
     
-    with open(r"C:\Users\chensheng\Desktop\%s_%s.txt"%(file_name, today), "a",
+    with open(r"C:\Users\***\Desktop\%s_%s.txt"%(file_name, today), "a",
                   encoding="utf-8-sig", newline='') as f:
         
         f.write(content)

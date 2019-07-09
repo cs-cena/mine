@@ -98,7 +98,7 @@ def write(pt_name, rows):
     
     today = datetime.date.today()
 
-    with open(r"C:\Users\chensheng\Desktop\%s_%s.csv"%(pt_name, today), "a",
+    with open(r"C:\Users\***\Desktop\%s_%s.csv"%(pt_name, today), "a",
               encoding="utf-8-sig", newline='') as f:
         
         writer = csv.writer(f) 
@@ -109,7 +109,7 @@ def write_txt(file_name, content):
 
     today = datetime.date.today()
     
-    with open(r"C:\Users\chensheng\Desktop\%s_%s.txt"%(file_name, today), "a",
+    with open(r"C:\Users\***\Desktop\%s_%s.txt"%(file_name, today), "a",
                   encoding="utf-8-sig", newline='') as f:
         
         f.write(content)
@@ -168,7 +168,7 @@ def r360():
     #现金贷口子只在融360app上看得见，下融360手机app,用fiddler抓app数据包，数据都在这个url的返回里https://bigapp.rong360.com/taojinyun/productlist/taojinlist
     #但不能直接爬，有反爬机制，直接用fiddler保存数据为txt即可，下载后把里面的报头都删了，留下json。
     
-    with open(r"C:\Users\chensheng\Desktop\1.txt", encoding="utf-8-sig") as f:
+    with open(r"C:\Users\***\Desktop\1.txt", encoding="utf-8-sig") as f:
         content = json.load(f)
         
     rows = [["产品名", "额度范围", "审核时间", "预估时间", "月费率", "贷款期限"]]
@@ -387,7 +387,7 @@ def dkw2345():
     
     for n in range(1,5):
         
-        with open(r"C:\Users\chensheng\Desktop\%s.txt"%n,"r",encoding="utf-8-sig") as f:            
+        with open(r"C:\Users\***\Desktop\%s.txt"%n,"r",encoding="utf-8-sig") as f:            
             dkw_content = json.load(f)
             #load是从文件里面load,loads是从str里面load
         
@@ -415,7 +415,7 @@ def jdqdk():
     #需拖动，有好几个，拉一次显示10个保存一次
     for n in range(1,5):
         
-        with open(r"C:\Users\chensheng\Desktop\%s.txt"%n,"r",encoding="utf-8-sig") as f:
+        with open(r"C:\Users\***\Desktop\%s.txt"%n,"r",encoding="utf-8-sig") as f:
             jdqdk_content = json.load(f)
             #load是从文件里面load,loads是从str里面load
            
@@ -442,7 +442,7 @@ def geinihua():
     
     list_geinihua = [["平台名字", "额度范围", "综合利率(月)"]]
     
-    with open(r"C:\Users\chensheng\Desktop\1.txt","r",encoding="utf-8-sig") as f:
+    with open(r"C:\Users\***\Desktop\1.txt","r",encoding="utf-8-sig") as f:
         geinihua_content = json.load(f)
        #load是从文件里面load,loads是从str里面load
     
@@ -500,7 +500,7 @@ def beijing():
     response = load_page_prox(url_bj, data_bj, headers_bj, proxies)#, proxies
     rq_bj = json.loads(response)
     
-    #with open(r'C:\Users\chensheng\Desktop\bj.json', 'w', encoding='utf-8') as json_file:
+    #with open(r'C:\Users\***\Desktop\bj.json', 'w', encoding='utf-8') as json_file:
         #json.dump(rq_bj, json_file, ensure_ascii=False)
         #print("write json file success!")
     
@@ -628,7 +628,7 @@ def kanong_market():
     
     print(df)    
     
-    df.to_csv("C:/Users/chensheng/Desktop/kanong.csv",encoding='utf-8-sig',index=None)    
+    df.to_csv("C:/Users/***/Desktop/kanong.csv",encoding='utf-8-sig',index=None)    
 '''     
 
 
@@ -1006,11 +1006,11 @@ def aikawang():
 #load_page3 解码"gbk"    
 def bank_card_info():
     
-    path = r"C:\Users\chensheng\Desktop\bank_num.csv"
+    path = r"C:\Users\***\Desktop\bank_num.csv"
     bank_num = read_2_csv(path)
     links = [i[0].replace("\ufeff", "") for i in bank_num]
 
-    path = r"C:\Users\chensheng\Desktop\bank_card_info_2019-05-30.csv"
+    path = r"C:\Users\***\Desktop\bank_card_info_2019-05-30.csv"
     bank_530 = read_2_csv(path)
     dele = [ii[5].replace("\ufeff", "") for ii in bank_530]
 
@@ -1200,7 +1200,7 @@ if __name__ == '__main__':
         #]
         
     #for path in paths:
-        #aa = read_2_csv(r"C:\Users\chensheng\Desktop\%s"%path)
+        #aa = read_2_csv(r"C:\Users\***\Desktop\%s"%path)
         #bb.extend(aa)
     #write("kanong_90k", bb) 
     
@@ -1240,7 +1240,7 @@ if __name__ == '__main__':
     #wdty_blacklist()
     
     #爱卡网
-    aikawang()
+    #aikawang()
     
     #银行卡信息
     #bank_card_info()

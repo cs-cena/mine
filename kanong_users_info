@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jun 13 14:43:42 2019
+
+@author: chensheng
+"""
+
 import requests
 from lxml import etree
 import re
@@ -55,7 +62,7 @@ def kanong(save_uid, final_uid):
             html = load_page4(url, headers)#, proxies 
             #print(html)
             
-            keywords = ["用户空间不存在","请重新注册" , "空间已被锁定"]
+            keywords = ["用户空间不存在","请重新注册" , "空间已被锁定", "1970-1-1 08:00"]
             
             #all函数测试迭代对象中是否所有条件都成立
             #all([True,False,True]) 结果为False
@@ -83,17 +90,30 @@ def kanong(save_uid, final_uid):
                 #print(nickname)
                 
                 #kws = ['color="#00CCFF"', 'color="#CCCCCC"','color="#999999"', 'color="#00CCCC"','color="#00CC00"', 'color="#00CC99"']
-                kws = ['冻结', '金融传奇', '禁止访问']
+                kws = ['冻结', '金融传奇', '禁止访问', '>VIP<', '至尊成员', '等待验证']
                 #用户组
                 if "会员标志" in html:
-                    
+                    #print(1)
                     if "管理组" in html:
-                        user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li[2]//a/text()")[0]
-                    else:
+                        #print(2)
+                        if "</font></a></span>" not in html:
+                            user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li[2]//a/text()")[0]
+                        else:
+                            user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li[2]//a/font/text()")[0]
+                    
+                    elif any(kw in html for kw in kws):
+                        #print(3)
                         user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li//a/text()")[0]
+                                                    
+                    else:
+                        #print(4)
+                        user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][3]/ul[1]/li//a/font/text()")[0]
                                                           
                 elif "管理组" in html:
-                    user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][2]/ul[1]/li[2]//a/text()")[0]
+                    if "</font></a></span>" not in html: 
+                        user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][2]/ul[1]/li[2]//a/text()")[0]
+                    else:
+                        user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][2]/ul[1]/li[2]//a/font/text()")[0]
                                                 
                 elif any(kw in html for kw in kws):            
                     user_group = selector.xpath("//div[@class='pbm mbm bbda cl'][2]/ul[1]/li//a/text()")[0]
@@ -123,7 +143,7 @@ def kanong(save_uid, final_uid):
                 elif "在线时间" in html:
                     ff = selector.xpath("//div[@class='pbm mbm bbda cl'][2]/ul[@id='pbbs']/li[3]/text()")[0]
                                         
-                elif "最后访问时间" not in html:
+                elif "上次活动时间" not in html:
                     ff = ''
                     
                 else:
@@ -178,7 +198,7 @@ def kanong(save_uid, final_uid):
                 #collect_coin = nn.replace("查询币", "") 
                 #print(nn)                
                 
-                                               
+                #回贴数,主题数,昵称,用户组,注册时间,最后登录时间,最后发表时间,朋友数,积分数,贡献,vip美金,花贝,uid                               
                 row = [
                     response, topic, 
                     nickname, user_group, 
@@ -195,7 +215,7 @@ def kanong(save_uid, final_uid):
                 
             if uid%500 == 0: 
                 time.sleep(random.randint(5, 8))
-                        
+
     except Exception as e:
         
         print(str(e))
@@ -203,7 +223,7 @@ def kanong(save_uid, final_uid):
         
 if __name__ == '__main__':
     #2019-06-28 卡农 最大uid 1030979 注册时间20190628 14:25
-    save_uids = [23243, 1031001]#1030979 1031001
+    save_uids = [803854, 1039300]#1030979 1031001 33540
     
     while True: 
         
@@ -213,7 +233,7 @@ if __name__ == '__main__':
         final_uid = save_uids[1]
         
         #kanong_users_info
-        kanong(save_uid, final_uid)            
+        kanong(save_uid, final_uid)
         
         print('总耗时step_href：%.5f秒' % float(time.time()-start))
         print('save_uids: %s' % save_uids[0])
@@ -222,5 +242,5 @@ if __name__ == '__main__':
         if save_uids[0] == save_uids[1]-1:
             break
         
-        time.sleep(random.randint(10, 20))#10, 20
+        time.sleep(random.randint(5, 15))#10, 20
         

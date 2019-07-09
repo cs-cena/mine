@@ -14,7 +14,7 @@ def write(pt_name, rows):
     
     today = datetime.date.today()
 
-    with open(r"C:\Users\chensheng\Desktop\赚客\%s_%s.csv"%(pt_name, today), "a",
+    with open(r"C:\Users\***\Desktop\赚客\%s_%s.csv"%(pt_name, today), "a",
               encoding="utf-8-sig", newline='') as f:
         
         writer = csv.writer(f) 
@@ -30,7 +30,6 @@ def load_page4(url, headers):#, proxies
     #print(text)
     return text  
        
-#http://www.zuanke8.com/home.php?mod=space&uid=533904&do=index
 #http://www.zuanke8.com/home.php?mod=space&uid=6968&do=profile 个人资料页 最全
 #2019-06-11 最大uid 993291 最小uid 2
 #"您指定的用户空间不存在" 

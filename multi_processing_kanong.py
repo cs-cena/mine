@@ -34,7 +34,7 @@ def write(pt_name, rows):
     
     today = datetime.date.today()
 
-    with open(r"C:\Users\chensheng\Desktop\%s_%s.csv" % (pt_name, today), "a", encoding= "utf-8-sig", newline='') as f:
+    with open(r"C:\Users\***\Desktop\%s_%s.csv" % (pt_name, today), "a", encoding= "utf-8-sig", newline='') as f:
         writer = csv.writer(f) 
         writer.writerows(rows)
         

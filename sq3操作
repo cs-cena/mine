@@ -1,0 +1,120 @@
+--建表--
+cur.execute('''CREATE TABLE kanong_users (
+        response INT, 
+        topic INT, 
+        nickname CHAR(30), 
+        user_group CHAR(30), 
+        register_time TIMESTAMP, 
+        last_login_time TIMESTAMP,
+        lacst_active_time TIMESTAMP, 
+        friend INT,
+        point INT, 
+        achieve INT, 
+        dollar INT,
+        flower_coin INT, 
+        uid INT
+);''')
+
+
+cur.execute('''CREATE TABLE wulai (
+    name CHAR(30),
+    phone CHAR(30),
+    certificateNo CHAR(30),
+    headPic CHAR(100),
+    sex CHAR(30),
+    age INT,
+    homeAddress CHAR(100),
+    province CHAR(30),
+    city CHAR(30),
+    createTime TIMESTAMP
+);''')
+
+    cur.execute('''CREATE TABLE zuanke (
+            response INT, 
+            topic INT, 
+            nickname CHAR(30), 
+            user_group CHAR(30), 
+            register_time TIMESTAMP, 
+            last_login_time TIMESTAMP,
+            last_active_time TIMESTAMP,             
+            point INT, 
+            guo INT,
+            friend INT,
+            uid INT
+    );''')
+
+--csv转入sqlite--
+
+df = pd.read_csv(r'C:\Users\chensheng\Desktop\kanong_users\kanong_users_extend_2019-07-08.csv')
+
+--kanong
+columns = [
+    'response', 'topic', 
+    'nickname', 'user_group', 
+    'register_time', 'last_login_time',
+    'lacst_active_time', 'friend',
+    'point', 'achieve', 'dollar',
+    'flower_coin', 'uid'
+]
+
+df.columns = columns
+
+df.to_sql('kanong_users', conn, if_exists='append', index=False)
+
+--天下无赖
+columns = [
+    'name',
+    'phone',
+    'personid',
+    'headPic',
+    'sex',
+    'age',
+    'homeAddress',
+    'province',
+    'city',
+    'createTime'
+]
+
+--赚客
+    columns = [
+        'response', 'topic', 
+        'nickname', 'user_group', 
+        'register_time', 'last_login_time',
+        'last_active_time', 'point', 'guo', 'friend','uid'
+    ]
+
+--查询所有表 
+cur.execute("select name from sqlite_master where type='table' order by name")
+
+
+--查询 按用户组 对应人数 20190501之后
+    cur.execute(
+        '''
+        SELECT 
+            strftime("%m", last_login_time) as month
+            ,count(uid) AS aa
+        FROM zuanke
+        WHERE register_time > '2019-01-01 00:00:01'
+        GROUP BY month
+        ORDER BY month ASC
+        ''')
+
+
+    cur.execute('''
+        select
+            age, 
+            count(name)
+            --,createtime
+            --,count(personid) as aa
+        from 
+        where createtime > '2017/1/1 00:00:01'
+        group by age
+        --order by aa ASC
+    ''')
+
+
+--查表内字段
+    cur.execute(
+        '''
+        PRAGMA table_info(zuanke)
+        ''')

@@ -30,7 +30,8 @@ def write(pt_name, rows):
         writer = csv.writer(f) 
         writer.writerows(rows) 
         
-        
+#先在index上找到内容链接"/sdfy_search/bzxr/findXzbzxInfos.do?bzxr.court_no=0F44"
+#点进去再加载一页，找到http://www.sdcourt.gov.cn/sdfy_search/bzxr/xzbzxList.do，这就是需要post的        
 def shandong_court(page):
     
     headers = {

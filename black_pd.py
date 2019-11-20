@@ -70,3 +70,11 @@ if __name__ == '__main__':
     
     #clean_name()
     
+    path_source = r"C:\Users\Administrator\Desktop\1"
+    names = [
+    "交易日期", "交易时间", "支出",
+    "存入", "余额", "交易类型",
+    "交易备注", "大类", "明细"
+    ]
+    
+    df = creat_df(path_source, names)

@@ -36,19 +36,17 @@ cur.execute(
     ('01' , '赵雷' , '1990-01-01' , '男')
     ,('02' , '钱电' , '1990-12-21' , '男')
     ,('03' , '孙风' , '1990-05-20' , '男')
-    ,('04' , '李云' , '1990-08-06' , '男')
-    ,('05' , '周梅' , '1991-12-01' , '女')
-    ,('06' , '吴兰' , '1992-03-01' , '女')
-    ,('07' , '郑竹' , '1989-07-01' , '女')
-    ,('09' , '张三' , '2017-12-20' , '女')
-    ,('10' , '李四' , '2017-12-25' , '女')
-    ,('11' , '李四' , '2017-12-30' , '女')
-    ,('12' , '赵六' , '2017-01-01' , '女')
-    ,('13' , '孙七' , '2018-01-01' , '女');
-
+    ,('04' , '李云' , '1990-08-06' , '男');
     ''')
 
 --建表--
+'''
+CREATE TABLE diary (
+    dTime TEXT,
+    restaurant TEXT,
+    dText TEXT
+);'''
+
 cur.execute('''CREATE TABLE kanong_users (
         response INT, 
         topic INT, 
@@ -79,25 +77,31 @@ cur.execute('''CREATE TABLE wulai (
     createTime TIMESTAMP
 );''')
 
-    cur.execute('''CREATE TABLE zuanke (
-            response INT, 
-            topic INT, 
-            nickname CHAR(30), 
-            user_group CHAR(30), 
-            register_time TIMESTAMP, 
-            last_login_time TIMESTAMP,
-            last_active_time TIMESTAMP,             
-            point INT, 
-            guo INT,
-            friend INT,
-            uid INT
-    );''')
+
+cur.execute('''CREATE TABLE zuanke (
+        response INT, 
+        topic INT, 
+        nickname CHAR(30), 
+        user_group CHAR(30), 
+        register_time TIMESTAMP, 
+        last_login_time TIMESTAMP,
+        last_active_time TIMESTAMP,             
+        point INT, 
+        guo INT,
+        friend INT,
+        uid INT
+);''')
+
 
 --csv转入sqlite--
 
-df = pd.read_csv(r'C:\Users\chensheng\Desktop\kanong_users\kanong_users_extend_2019-07-08.csv')
+file_path = r''
 
---kanong
+conn = sq.connect(file_path)
+cur = conn.cursor()
+
+df = pd.read_csv(r'C:\Users\***\Desktop\kanong_users\kanong_users_extend_2019-07-08.csv')
+
 columns = [
     'response', 'topic', 
     'nickname', 'user_group', 
@@ -111,7 +115,8 @@ df.columns = columns
 
 df.to_sql('kanong_users', conn, if_exists='append', index=False)
 
---天下无赖
+
+--天下无赖--
 columns = [
     'name',
     'phone',

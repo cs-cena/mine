@@ -197,24 +197,6 @@ def dkgj():
     headers = {"User-Agent":"xulugj://4.12.0 (Android;android22;zh_CN;ID:2-821d204430d0413183f89e03519e9ca7-861868034424141-meizu-708d34db466325dd0b4fe0cb98667418)"}
     
     data = {
-        "appKey":"17171","appClient":"android",
-        "versionCode":"20190115",
-        "longitude":"121.63661193847656",
-        "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiL3VzZXIvbG9naW4iLCIxNTUxMTcwNDQ0Mjk5IiwiMjA4NTkyMTUiXX0.DbagFYCKFW2glL12GnWRwBM3iLXwFyaHDJg3OSACHng",
-        "accessToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOjE2LCJleHQiOjE1NTM3NjI0NDQyNzEsInVpZCI6IjE5MDIyNjk5MzIyMTM1NzgwMCIsImdzdCI6Ijg2MTg2ODAzNDQyNDE0MSIsImFjbCI6Mn0.GKkt_VRKDBwFzLCUuPxD2rPuTgJS2PwdVLuqIKvNzYA",
-        "timestamp":"1551256677",
-        "appSign":"8031d0eecda59cc5d437cf4b791f6d83",
-        "net":"WIFI",
-        "clientId":"13065ffa4e55e5b0b61",
-        "appVersion":"1.4.0",
-        "imei":"861868034424141",
-        "coreVersion":"17",
-        "mobileModel":"m1 metal",
-        "ip":"27.115.63.90",
-        "latitude":"31.226547241210938",
-        "channel":"xandroid6000_x22",
-        "cityId":"73",
-        "params":{"pageSize":100,"pageNo":2,"orderId":0}
         }
         
     url = "http://loan.mydkguanjia.com/loanCenter/productloan/list"
@@ -275,19 +257,7 @@ def beijing():
     #headers_bj = {"User-Agent":"Mozilla/5.0 (Macintosh;IntelMacOSX10_7_0) AppleWebKit/535.11 (KHTML,like Gecko) \
                  # Chrome/17.0.963.56 Safari/535.11"}
 
-    headers = {
-        "Accept":"application/json, text/javascript, */*; q=0.01",
-        "Accept-Encoding":"gzip, deflate, br",
-        "Accept-Language":"zh-CN,zh;q=0.9",
-        "Connection":"keep-alive",
-        "Content-Length":"62",
-        "Content-Type":"application/x-www-form-urlencoded; charset=UTF-8",
-        "Cookie":"td_cookie=3033775304; Hm_lvt_97f110905a34b097ed49b9e9a86c55da=1559182513,1559182595,1559182644,1559182723; JSESSIONID=3E6FD2F058A7752D0FF6A835BAD0605B; Hm_lpvt_97f110905a34b097ed49b9e9a86c55da=1559193681",
-        "Host":"www.bjp2p.com.cn",
-        "Origin":"https://www.bjp2p.com.cn",
-        "Referer":"https://www.bjp2p.com.cn/malice/maliceList",
-        "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
-        "X-Requested-With":"XMLHttpRequest"
+    headers = { #带cookie
     }              
 
     data ={     
@@ -354,7 +324,7 @@ def clean_word(text):
 #互金协会项目信息        
 def hujin_pro(): 
     
-    headers ={"User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"}  
+    headers ={}  
     
     rows  = []              
 
@@ -419,7 +389,7 @@ def hujin_pro():
 #第2个for循环里取口子detail时取巧了，没有一个个取，实际中大部分口子都是每项都有的，但有小部分是有缺失的。爬完自己处理一下
 def aikawang():
             
-    headers ={"User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"}  
+    headers ={}  
    
     for page in range(1,360):
         
@@ -471,9 +441,7 @@ def aikawang():
 #"您指定的用户空间不存在" 
 def zuanke():
        
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)",
-        "Cookie": "_uab_collina=156023877583519853668681; Hm_lvt_da6569f688ba2c32429af00afd9eb8a1=1557804792,1560238776; timestamp=1560247486000; sign=23A789B59DC68BE1EF26C2328E93E992; ki1e_2132_pc_size_c=0; ki1e_2132_saltkey=L0881if8; ki1e_2132_lastvisit=1560244373; ki1e_2132_sendmail=1; ki1e_2132_ulastactivity=1560247988%7C0; ki1e_2132_auth=b255Bjh7qrZtccqLk7g3NM26aDJpeEu6VzhfGz1diZIkmlqPfFLfaQSNW2PoLP%2FarWFLq%2FtQNs18aKIUFoAvmn4j9%2BY; ki1e_2132_lastcheckfeed=877429%7C1560247988; ki1e_2132_checkfollow=1; ki1e_2132_lip=101.230.10.253%2C1560247988; ki1e_2132_connect_is_bind=0; ki1e_2132_nofavfid=1; ki1e_2132_checkpm=1; ki1e_2132_lastact=1560247998%09connect.php%09check; Hm_lpvt_da6569f688ba2c32429af00afd9eb8a1=1560247999; amvid=8a4f84d79d51d0afcfb5ccf67ddb4a98; td_cookie=4100892490"
+    headers = {#要带cookie
     }
     
     try:
@@ -581,7 +549,6 @@ def zuanke():
 def wulai():
     
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     for page in range(1, 7):
@@ -629,7 +596,6 @@ def wulai():
 def xinyong():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     ff = []
@@ -654,7 +620,6 @@ def xinyong():
 def jinlixinshanxi():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     for page in range(1, 1615):
@@ -691,7 +656,6 @@ def jinlixinshanxi():
 def shandong_court():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     #44147
@@ -759,7 +723,6 @@ def get_pic():
 
             
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }    
     
     url_list = [
@@ -811,9 +774,7 @@ def sh_high_court():
         return new
     
     
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
-        "Cookie": "td_cookie=3303386247; JSESSIONID=B11C753508C235E5FAFC80D9A1AAF5E4-n1"
+    headers = {#要带cookie
     }
     
     #共16392页
@@ -905,7 +866,6 @@ def sh_high_court():
 def yutu():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     for page in range(268, 2928):#2928
@@ -951,9 +911,7 @@ def anhui_high_court(start_page):
     
     global memory
     
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)",
-        "Cookie": "td_cookie=2874964207; JSESSIONID=21EC5500F5D76A651E46D7145311ACEB"
+    headers = {#要带cookie
     }
     
     
@@ -984,7 +942,6 @@ def anhui_high_court(start_page):
 def qinghai_shixin():
 
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     for page in range(1, 231):#231
@@ -1015,7 +972,6 @@ def qinghai_shixin():
 def guangzhou_gongkai():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     url = r"http://wsla.gzcourt.org.cn/gateway/ssfwapi/ssfw_app/app/bgt"
@@ -1059,7 +1015,6 @@ def guangzhou_gongkai():
 def chengdu():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     url = r"http://cdfy12368.gov.cn:8141/sfgk/webapp/area/cdsfgk/zxxx/ajax.jsp"
@@ -1124,7 +1079,6 @@ def chengdu():
 def ningbo_xinyong():
     
     headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
     }
     
     #44147
@@ -1177,9 +1131,83 @@ def ningbo_xinyong():
         write("ningbo_xinyong", rows)
        
 
+  def shantou_court():
+    
+    headers = {
+    }
+    
+    ff = []
+
+    for page in range(2, 8):
         
+        print(page)
+        
+        url = r"http://www.stcourts.gov.cn/web/list?lmdm=1016&page=%s" % page
+        
+        html = load_page3(url, headers)        
+        selector = etree.HTML(html)
+        aa = selector.xpath("//ul[@class='text-type-3 page-list']/li/a/@href")
+        
+        for each in aa:
+            url2 = r"http://www.stcourts.gov.cn" + each
+            html2 = load_page3(url2, headers)
+            data=pd.read_html(html2, header=None, encoding='utf-8')
+            df = data[0].iloc[2:, 0:2]
+            ff.append(df)
+            #print(data)
+    p = pd.concat(ff)
+    p.to_csv("C:/Users/***/Desktop/1.csv", mode='a', encoding='utf-8-sig', index=None, header=None)        
 
+def temp1():
+    
+    headers = {
+           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
+    }
 
+    urls = [
+            
+    ]
+    
+    ff = []
+    for url in urls[0:1]:
+        html = load_page3(url, headers)
+        data=pd.read_html(html, header=None, encoding='utf-8')
+        df = data[0]#.iloc[2:, :]
+        print(df)
+        ff.append(df)
+    #p = pd.concat(ff)
+    #p.to_csv("C:/Users/***/Desktop/1.csv", mode='a', encoding='utf-8-sig', index=None, header=None)
+    
+    
+def selenium_temp():
+    
+    from selenium import webdriver
+    
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")    
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+    
+    urls = [
+        r"http://fy.xjbt.gov.cn/c/2016-10-28/2901572.shtml",
+    ]
+    
+    for url in urls:
+        driver.get(url)
+        time.sleep(random.randint(2, 3))
+        xuhao = driver.find_elements_by_xpath(".//table[1]/tbody/tr/td[1]")
+        
+        rows = []
+        for num in range(2, len(xuhao)):
+            sfz = driver.find_elements_by_xpath(".//table[1]/tbody/tr[{}]/td".format(num))
+            sfzs = [i.text for i in sfz]
+            rows.append(sfzs)
+            print(sfzs)
+            
+        
+        write("***", rows)
+        #如果当前窗口关闭，则无法保持session
+        #一个脚本的运行过程中，只打开一个webdriver浏览器即可
+        #driver.close()    
 
 if __name__ == '__main__':
       
@@ -1197,4 +1225,4 @@ if __name__ == '__main__':
             print(str(e))
     '''
     
-    ningbo_xinyong()
+    #ningbo_xinyong()

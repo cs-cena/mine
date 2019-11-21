@@ -1,11 +1,11 @@
-pytorch-captcha-recognition-master使用指南：
+﻿pytorch-captcha-recognition-master使用指南：
 1 先按后面的配置设定和改好
-2 准备图片数据，可以使用captcha_gen.py来生成，也可以直接自己准备好数据集（图片名
-
-字里写答案），放于dataset/train文件。
+2 准备图片数据，可以使用captcha_gen.py来生成，也可以直接自己准备好数据集（图片名字里写答案），放于dataset/train文件。
 3 使用captcha_train.py 训练模型，训练完成生成的模型文件"model.pkl"存于根目录
 4 使用captcha_test.py 测试准确率
 5 爬虫可调用captcha_predict.py 输出模型的预测结果
+
+需提前设置：
 
 captcha_gen.py 生成验证码
 设置图片大小
@@ -16,11 +16,7 @@ count = 2
 
 captcha_predict.py 生成预测值
 根据验证码中字符个数，添加位数，不然会溢出报错
-c4 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 4 * 
-
-captcha_setting.ALL_CHAR_SET_LEN:5 * 
-
-captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
+c4 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 4 * captcha_setting.ALL_CHAR_SET_LEN:5 * captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
 c = '%s%s%s%s%s' % (c0, c1, c2, c3, c4)
 
 captcha_setting.py 配置

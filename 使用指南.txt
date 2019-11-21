@@ -1,0 +1,61 @@
+pytorch-captcha-recognition-master使用指南：
+1 先按后面的配置设定和改好
+2 准备图片数据，可以使用captcha_gen.py来生成，也可以直接自己准备好数据集（图片名
+
+字里写答案），放于dataset/train文件。
+3 使用captcha_train.py 训练模型，训练完成生成的模型文件"model.pkl"存于根目录
+4 使用captcha_test.py 测试准确率
+5 爬虫可调用captcha_predict.py 输出模型的预测结果
+
+captcha_gen.py 生成验证码
+设置图片大小
+image = ImageCaptcha(width=200, height=50)
+设置生成数量
+count = 2
+
+
+captcha_predict.py 生成预测值
+根据验证码中字符个数，添加位数，不然会溢出报错
+c4 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 4 * 
+
+captcha_setting.ALL_CHAR_SET_LEN:5 * 
+
+captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
+c = '%s%s%s%s%s' % (c0, c1, c2, c3, c4)
+
+captcha_setting.py 配置
+设置验证码字符
+NUMBER 
+ALPHABET
+设置验证码字符个数
+MAX_CAPTCHA = 5
+图像大小
+IMAGE_HEIGHT
+IMAGE_WIDTH
+
+
+captcha_test.py 测试
+根据验证码中字符个数，添加位数，不然会溢出报错
+ c4 = captcha_setting.ALL_CHAR_SET[np.argmax(predict_label[0, 4 * 
+
+captcha_setting.ALL_CHAR_SET_LEN:5 * 
+
+captcha_setting.ALL_CHAR_SET_LEN].data.numpy())]
+        predict_label = '%s%s%s%s%s' % (c0, c1, c2, c3, c4)
+
+
+captcha_train.py 训练模型
+设置训练轮次
+num_epochs = 30
+将训练成功的模型文件，存于根目录
+torch.save(cnn.state_dict(), "./model.pkl")
+
+
+my_dataset.py 数据集读写配置
+如果不按注释写图片名字，则会直接读取全名，需自己去掉文件类型名
+label = ohe.encode(image_name.replace(".jpg","").replace(".png","").split('_')
+
+[0])
+
+
+one_hot_encoding.py 貌似是矩阵编解码，无需配置

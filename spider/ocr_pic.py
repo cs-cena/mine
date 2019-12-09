@@ -89,7 +89,7 @@ def ocr_pic():
         header2 = {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
-        pocr = s.post(url,headers=header, data=params)
+        pocr = s.post(url, headers=header, data=params)
         # print(pocr.text)
         js = json.loads(pocr.text)
         #print(js)
@@ -168,5 +168,3 @@ def get_yzm_pic(name):
 if __name__ == '__main__':
     
     #ocr_pic()
-    for i in range(1, 11):
-        get_yzm_pic(i)

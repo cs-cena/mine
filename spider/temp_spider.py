@@ -44,7 +44,15 @@ def read_2_csv(path):
             
     return rows
    
-    
+
+def read_json():
+
+    with open(r"C:\Users\***\Desktop\%s.txt"%n,"r",encoding="utf-8-sig") as f:            
+        read = json.load(f)
+        #load是从文件里面load,loads是从str里面load
+    return read
+
+
 def load_page_prox(url, data, headers, proxies):#, proxies
 
     response = requests.post(url, headers=headers, data=data, proxies=proxies)# , verify = False, proxies=proxies,
@@ -127,19 +135,8 @@ def write_txt(file_name, content):
         f.write(content)
 
 
-def read_json():
-
-    with open(r"C:\Users\***\Desktop\%s.txt"%n,"r",encoding="utf-8-sig") as f:            
-        read = json.load(f)
-        #load是从文件里面load,loads是从str里面load
-    return read
-
-
 def clean_word(text):
-    new = []
-    for i in text:
-        new.append(i.replace(" ","").replace("\n","").replace("\r",""))
-    
+    new = [i.replace(" ","").replace("\n","").replace("\r","") for i in text]
     return new
 
 

@@ -61,6 +61,15 @@ def clean_name():
     
     df3.to_csv(r"C:\Users\***\Desktop\1.csv", mode='a', encoding="utf-8-sig", index=None, header=None)    
 
+def temp():
+    path_source = r"C:\Users\***\Desktop\1"
+    names = ["1","2","3"]
+
+    df = creat_df(path_source, names) 
+    df2 = df[["1", "2"]]
+    df3 = df2[(df2["2"].str.len() == 18) & (df2["1"].str.len() < 5)]
+    df4 = df3.drop_duplicates(["1","2"])
+    df4.to_csv(r"C:\Users\***\Desktop\1.csv", mode='a', encoding="utf-8-sig", index=None, header=None)
     
 if __name__ == '__main__':  
   

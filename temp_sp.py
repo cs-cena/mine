@@ -225,3 +225,54 @@ def temp_prox():
 
     #write("", rows)
     #time.sleep(random.randint(0, 1))
+
+def temp_pd_readHtml():
+    
+    headers = {
+           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
+    }
+
+    urls = [
+            
+    ]
+    
+    ff = []
+    for url in urls[0:1]:
+        html = load_page3(url, headers)
+        data=pd.read_html(html, header=None, encoding='utf-8')
+        df = data[0]#.iloc[2:, :]
+        print(df)
+        ff.append(df)
+    #p = pd.concat(ff)
+    #p.to_csv("C:/Users/***/Desktop/1.csv", mode='a', encoding='utf-8-sig', index=None, header=None)
+    
+    
+def selenium_temp():
+    
+    from selenium import webdriver
+    
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")    
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+    
+    urls = [
+        r"",
+    ]
+    
+    for url in urls:
+        driver.get(url)
+        time.sleep(random.randint(2, 3))
+        xuhao = driver.find_elements_by_xpath(".//table[1]/tbody/tr/td[1]")
+        
+        rows = []
+        for num in range(2, len(xuhao)):
+            sfz = driver.find_elements_by_xpath(".//table[1]/tbody/tr[{}]/td".format(num))
+            sfzs = [i.text for i in sfz]
+            rows.append(sfzs)
+            print(sfzs)
+            
+        
+        write("", rows)
+        #如果当前窗口关闭，则无法保持session
+        #一个脚本的运行过程中，只打开一个webdriver浏览器即可
+        #driver.close()

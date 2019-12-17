@@ -8,8 +8,8 @@ import json
 import csv
 import base64, sys, ssl
 from requests import Session
-import os
-
+import os, sys
+from PIL import Image
 
 def load_page3(url, headers):
 
@@ -74,9 +74,10 @@ def ocr_pic():
     url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token=' + access_token # 高精度版地址
     
     
-    train_path = r'C:\Users\***\Desktop\yzm\train_pic'
+    train_path = r'C:\Users\***\Desktop\2'
     pic_list = file_name(train_path)
     
+    x=0
     for each in pic_list[:]:
         # # 二进制方式打开图文件
         #print(train_path+"\\"+each)
@@ -89,20 +90,34 @@ def ocr_pic():
         header2 = {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
-        pocr = s.post(url, headers=header, data=params)
+        pocr = s.post(url,headers=header, data=params)
         # print(pocr.text)
         js = json.loads(pocr.text)
         #print(js)
         if "error_code" not in js:
-            for words in js["words_result"]:
-                yzm_num = words['words'].replace(">", "")
-                print(yzm_num)
-    
-            imgdata = base64.b64decode(img)
-            test_path = r'C:\Users\***\Desktop\yzm\test_pic\{0}.jpg'.format(yzm_num)
-            save_pic(test_path, imgdata)
-            os.remove(train_pic)
+            print(js)
+            #row = [each["words"] for each in js["words_result"]]
+            row = [js["words_result"][0]["words"],
+                   #js["words_result"][1]["words"]
+            ]
+            print(row)
+            write("郧县农商行_信用卡逾期",[row])
+            new_name = train_path+"\\"+"{}.jpg".format(row[0].replace("*", "-"))
+            os.rename(train_pic, new_name)
             time.sleep(random.randint(1, 2))
+            x+=1
+            print(x)
+            
+            #for words in js["words_result"]:
+                #content = words['words']
+                #print(words)
+            
+            #识别图片内容后写成名字
+            #imgdata = base64.b64decode(img)
+            #test_path = r'C:\Users\***\Desktop\yzm\test_pic\{0}.jpg'.format(yzm_num)
+            #save_pic(test_path, imgdata)
+            #os.remove(train_pic)
+            #time.sleep(random.randint(1, 2))
     
     #return #words['words']
 
@@ -115,7 +130,7 @@ def ocr_table():
     header = {'Content-Type':'application/json; charset=UTF-8'}
     data = {'grant_type':'client_credentials',
     'client_id':'***', # API key
-    'client_secret':'***' # Secret Key
+    'client_secret':'*** # Secret Key
     }
     p = s.post(host, headers=header,data=data)
     js = json.loads(p.text)
@@ -136,7 +151,7 @@ def ocr_table():
         'Content-Type': 'application/x-www-form-urlencoded'
         }
         pocr = s.post(url, headers=header2, data=params)
-        # print(pocr.text)
+        #print(pocr.text)
         js = json.loads(pocr.text)
         print(js)
         
@@ -153,7 +168,7 @@ def get_yzm_pic(name):
     
     headers = {
            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)",
-           "Cookie": "***"
+           "Cookie": ""
     }    
     
     url = r"http://www.qhcourt.gov.cn:8080/wsfy-ww/cpws_yzm.jpg?n=0"
@@ -164,7 +179,100 @@ def get_yzm_pic(name):
     print(name) 
     
     
+def get_anhui_pic():
+    
+    headers = {
+           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
+    }
 
+    links = [
+
+    ]
+
+    for url in links:
+
+        print(url)
+        
+        html = load_page3(url, headers)
+
+        selector = etree.HTML(html)
+        
+        pic_links = selector.xpath("//li//img/@src")
+        
+        for ps in pic_links:
+            x = ps.index("=")+1
+            name = ps[x:x+8]
+            pic = requests.get(ps, headers=headers).content
+            path = r"C:\Users\***\Desktop\1\{0}.jpg".format(name)
+            save_pic(path, pic)
+    
+            
+def get_pic():
+    
+    headers = {
+           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
+    }
+    
+
+    links = [   
+      
+    ]
+    
+    x=1
+    for url in links:
+        pic = requests.get(url, headers=headers).content
+        path = r"C:\Users\***\Desktop\1\{0}.jpg".format(x)
+        save_pic(path, pic)
+        x+=1
+  
+        
+def cut_pic():
+    
+    path_source = r"C:\Users\***\Desktop\1"
+    for i in os.listdir(path_source)[:]:
+        path = path_source + "\{0}".format(i)
+                
+        for n in range(0, 48):
+            # 打开刚截取的全屏图
+            img = Image.open(path)
+            
+            y = img.size[1]/48
+            co_y = n*y #y坐标
+            co_x = 0 #x坐标
+            #print(co_y)
+            length = co_x + 249
+            width = co_y + y
+            # 定位到需要截取的地方
+            img = img.crop((co_x, co_y, length, width))
+            # 截取成功并保存到本地
+            #可以用img.convert()将RGBA转换为RBG,就可以使用JPG了
+            img.convert('RGB').save(r'C:\Users\***\Desktop\r2\{}_{}.jpg'.format(i.replace(".jpg", ""), co_y))
+
+            
+def cut_small_pic():
+    
+    path_source = r"C:\Users\***\Desktop\1"
+    for i in os.listdir(path_source)[:]:
+        path = path_source + "\{0}".format(i)
+        # 打开刚截取的全屏图
+        img = Image.open(path) 
+        # 定位到需要截取的地方
+        co_x = 260 #x坐标
+        co_y = 210 #y坐标
+        length = co_x + 370
+        width = co_y + 140
+        #width = img.size[1]
+        img = img.crop((co_x, co_y, length, width))
+        # 截取成功并保存到本地
+        img.save(r'C:\Users\***\Desktop\r1\{}'.format(i))
+    
+        
 if __name__ == '__main__':
     
-    #ocr_pic()
+    #get_anhui_pic()
+
+    #cut_pic()
+    #cut_small_pic()
+    ocr_pic()
+    
+    #get_pic()

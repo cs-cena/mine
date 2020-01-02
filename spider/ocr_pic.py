@@ -77,7 +77,6 @@ def ocr_pic():
     train_path = r'C:\Users\***\Desktop\2'
     pic_list = file_name(train_path)
     
-    x=0
     for each in pic_list[:]:
         # # 二进制方式打开图文件
         #print(train_path+"\\"+each)
@@ -95,31 +94,28 @@ def ocr_pic():
         js = json.loads(pocr.text)
         #print(js)
         if "error_code" not in js:
+            print(each)
             print(js)
-            #row = [each["words"] for each in js["words_result"]]
-            row = [js["words_result"][0]["words"],
-                   #js["words_result"][1]["words"]
-            ]
-            print(row)
-            write("郧县农商行_信用卡逾期",[row])
-            new_name = train_path+"\\"+"{}.jpg".format(row[0].replace("*", "-"))
+            row = [[each["words"] for each in js["words_result"]]]
+            #row = [[js["words_result"][0]["words"],
+                    #js["words_result"][1]["words"]
+            #]]
+            
+            #bre = ","
+            #item = [each["words"] for each in js["words_result"]]
+            #row  = [[",".join(item)]]
+            #print(row)
+            
+            write("江淮",row)
+                        
+            #生成随机数以防重复
+            rnd = int(round(random.random(),2)*1000)            
+            new_name = train_path+"\\"+"{}_{}.jpg".format(row[0][0].replace("*", "-").replace(":", ","), rnd)
             os.rename(train_pic, new_name)
+            
+            
             time.sleep(random.randint(1, 2))
-            x+=1
-            print(x)
-            
-            #for words in js["words_result"]:
-                #content = words['words']
-                #print(words)
-            
-            #识别图片内容后写成名字
-            #imgdata = base64.b64decode(img)
-            #test_path = r'C:\Users\***\Desktop\yzm\test_pic\{0}.jpg'.format(yzm_num)
-            #save_pic(test_path, imgdata)
-            #os.remove(train_pic)
-            #time.sleep(random.randint(1, 2))
-    
-    #return #words['words']
+
 
 
 def ocr_table():
@@ -129,8 +125,8 @@ def ocr_table():
     host = 'https://aip.baidubce.com/oauth/2.0/token'
     header = {'Content-Type':'application/json; charset=UTF-8'}
     data = {'grant_type':'client_credentials',
-    'client_id':'***', # API key
-    'client_secret':'*** # Secret Key
+    'client_id':'8jc549Xo8XAv9i6AblqFgj88', # API key
+    'client_secret':'MR7qspLaoluqGhImdZQy6ukKGbaH1l6D' # Secret Key
     }
     p = s.post(host, headers=header,data=data)
     js = json.loads(p.text)
@@ -168,7 +164,7 @@ def get_yzm_pic(name):
     
     headers = {
            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)",
-           "Cookie": ""
+           "Cookie": "***"
     }    
     
     url = r"http://www.qhcourt.gov.cn:8080/wsfy-ww/cpws_yzm.jpg?n=0"
@@ -186,6 +182,7 @@ def get_anhui_pic():
     }
 
     links = [
+
 
     ]
 
@@ -214,12 +211,12 @@ def get_pic():
     }
     
 
-    links = [   
-      
+    links = [
+
     ]
     
     x=1
-    for url in links:
+    for url in links[:]:
         pic = requests.get(url, headers=headers).content
         path = r"C:\Users\***\Desktop\1\{0}.jpg".format(x)
         save_pic(path, pic)
@@ -231,16 +228,19 @@ def cut_pic():
     path_source = r"C:\Users\***\Desktop\1"
     for i in os.listdir(path_source)[:]:
         path = path_source + "\{0}".format(i)
+        
+        num = int(int(i.replace(".jpg", "").split("_")[1])/1)
+        #num = 3
                 
-        for n in range(0, 48):
+        for n in range(0, num):
             # 打开刚截取的全屏图
             img = Image.open(path)
             
-            y = img.size[1]/48
+            y = img.size[1]/num
             co_y = n*y #y坐标
             co_x = 0 #x坐标
             #print(co_y)
-            length = co_x + 249
+            length = co_x + img.size[0]
             width = co_y + y
             # 定位到需要截取的地方
             img = img.crop((co_x, co_y, length, width))
@@ -257,14 +257,14 @@ def cut_small_pic():
         # 打开刚截取的全屏图
         img = Image.open(path) 
         # 定位到需要截取的地方
-        co_x = 260 #x坐标
-        co_y = 210 #y坐标
-        length = co_x + 370
-        width = co_y + 140
-        #width = img.size[1]
+        co_x = 153 #x坐标
+        co_y = 352 #y坐标
+        length = co_x + 172
+        width = co_y + 67
+        #width = img.size[1] 
         img = img.crop((co_x, co_y, length, width))
         # 截取成功并保存到本地
-        img.save(r'C:\Users\***\Desktop\r1\{}'.format(i))
+        img.convert('RGB').save(r'C:\Users\***\Desktop\r2\x_{}'.format(i))
     
         
 if __name__ == '__main__':
@@ -273,6 +273,6 @@ if __name__ == '__main__':
 
     #cut_pic()
     #cut_small_pic()
-    ocr_pic()
+    #ocr_pic()
     
-    #get_pic()
+    get_pic()

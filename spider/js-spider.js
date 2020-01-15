@@ -1,7 +1,14 @@
 
 //在chrome终端 域内发请求
-links = [
+let links = [
 ]
+
+//生成页数
+for (let i=1; i<=24; i++) {
+    let link = "" + i + ""
+    links.push(link)
+}
+
 
 for (let q=0; q<=links.length; q++) {
     link = links[q]
@@ -19,34 +26,14 @@ for (let q=0; q<=links.length; q++) {
         htmlDoc = parser.parseFromString(text, "text/html")
 
         let doc = htmlDoc.querySelectorAll("tr")
-        for(let i=8;i<30;i++) {
+        for(let i=8;i<doc.length;i++) {
             console.log(doc[i].innerText)
         }
     })
 }
 
 
-fetch("http://fy.xjbt.gov.cn/c/2018-12-21/7191034.shtml")
-    .then(function(response) {
-        if(response.ok) {
-            //读出返回值
-            text = response.text()
-            return text
-        }
-    })
-    .then(function(text) {
-        //将返回的html字符串解析为一个 DOM Document
-        let parser=new DOMParser()
-        htmlDoc = parser.parseFromString(text, "text/html")
-
-        let doc = htmlDoc.querySelectorAll("tr")
-        for(let i=1;i<5;i++) {
-            console.log(doc[i].innerText)
-        }
-    })
-
 //域内请求 DOM选择模板
-//http://www.yyfy.gov.cn/art/2016/9/14/art_3943_96034.html
 fetch("")
     .then(function(response) {
         if(response.ok) {
@@ -61,7 +48,7 @@ fetch("")
         htmlDoc = parser.parseFromString(text, "text/html")
 
         let doc = htmlDoc.querySelectorAll("tr")
-        for(let i=8;i<30;i++) {
+        for(let i=8;i<doc.length;i++) {
             console.log(doc[i].innerText)
         }
     })
@@ -99,6 +86,8 @@ for(let i=0;i<a.length;i++){
     }
 };
 
+
+
 //域内请求 GBK编码
 let links = [
 ]
@@ -129,3 +118,6 @@ for (let q=0; q<=links.length; q++) {
             reader.readAsText(blob, 'GBK')
         })
 }
+
+//querySelectorAll 子选择
+a = document.querySelectorAll("ul.meun_list > li") // ">"指选择子元素

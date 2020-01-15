@@ -26,7 +26,7 @@ for (let q=0; q<=links.length; q++) {
         htmlDoc = parser.parseFromString(text, "text/html")
 
         let doc = htmlDoc.querySelectorAll("tr")
-        for(let i=8;i<doc.length;i++) {
+        for(let i=8;i<=doc.length;i++) {
             console.log(doc[i].innerText)
         }
     })
@@ -48,7 +48,7 @@ fetch("")
         htmlDoc = parser.parseFromString(text, "text/html")
 
         let doc = htmlDoc.querySelectorAll("tr")
-        for(let i=8;i<doc.length;i++) {
+        for(let i=8;i<=doc.length;i++) {
             console.log(doc[i].innerText)
         }
     })
@@ -71,7 +71,7 @@ fetch(link)
 
 //在chrome终端 直接选取内容
 let a = document.querySelectorAll("p")
-for(let i=0;i<a.length;i++){
+for(let i=0;i<=a.length;i++){
     let b = a[i].textContent
     if (b.indexOf("身份") != -1) {
         b = b.replace("身份证号码：", "")
@@ -79,7 +79,7 @@ for(let i=0;i<a.length;i++){
     }
 };
 
-for(let i=0;i<a.length;i++){
+for(let i=0;i<=a.length;i++){
     let b = a[i].textContent
     if (b.indexOf("、") != -1) {
         console.log(b)        
@@ -111,7 +111,7 @@ for (let q=0; q<=links.length; q++) {
                 htmlDoc = parser.parseFromString(text, "text/html")
 
                 let doc = htmlDoc.querySelectorAll("img")
-                for(let i=0;i<doc.length;i++) {
+                for(let i=0;i<=doc.length;i++) {
                     console.log(doc[i].getAttribute("src"))//.innerText
                 }
             }

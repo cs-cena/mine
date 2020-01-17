@@ -106,11 +106,12 @@ def ocr_pic():
             #row  = [[",".join(item)]]
             #print(row)
             
-            write("江淮",row)
+            write("",row)
                         
             #生成随机数以防重复
             rnd = int(round(random.random(),2)*1000)            
             new_name = train_path+"\\"+"{}_{}.jpg".format(row[0][0].replace("*", "-").replace(":", ","), rnd)
+            print(new_name)
             os.rename(train_pic, new_name)
             
             
@@ -174,36 +175,7 @@ def get_yzm_pic(name):
     save_pic(path, pic)
     print(name) 
     
-    
-def get_anhui_pic():
-    
-    headers = {
-           "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8)"
-    }
-
-    links = [
-
-
-    ]
-
-    for url in links:
-
-        print(url)
-        
-        html = load_page3(url, headers)
-
-        selector = etree.HTML(html)
-        
-        pic_links = selector.xpath("//li//img/@src")
-        
-        for ps in pic_links:
-            x = ps.index("=")+1
-            name = ps[x:x+8]
-            pic = requests.get(ps, headers=headers).content
-            path = r"C:\Users\***\Desktop\1\{0}.jpg".format(name)
-            save_pic(path, pic)
-    
-            
+         
 def get_pic():
     
     headers = {
@@ -221,16 +193,33 @@ def get_pic():
         path = r"C:\Users\***\Desktop\1\{0}.jpg".format(x)
         save_pic(path, pic)
         x+=1
-  
+
+
+def saveimage_webp_to_jpg():
+    
+    path_source = r"C:\Users\***\Desktop\1"
+    x=1
+    for i in os.listdir(path_source)[:]: 
+        path = path_source + "\{}".format(i)
+        im = Image.open(path)
+        if im.mode=="RGBA":
+            im.load()  # required for png.split()
+            background = Image.new("RGB", im.size, (255, 255, 255))
+            background.paste(im, mask=im.split()[3])  # 3 is the alpha channel
+            im = background
+        im.save(r'C:\Users\***\Desktop\2\{}.jpg'.format(x),'JPEG')
+        x+=1
+
         
 def cut_pic():
     
     path_source = r"C:\Users\***\Desktop\1"
     for i in os.listdir(path_source)[:]:
         path = path_source + "\{0}".format(i)
-        
-        num = int(int(i.replace(".jpg", "").split("_")[1])/1)
-        #num = 3
+        num = int(int(i.replace(".jpg", "").split("_")[1]))
+        #img = Image.open(path)
+        #num = int(img.size[1]/18)+2
+        #num = 53
                 
         for n in range(0, num):
             # 打开刚截取的全屏图

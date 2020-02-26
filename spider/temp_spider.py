@@ -53,6 +53,32 @@ def read_json():
     return read
 
 
+def write(pt_name, rows):
+    
+    today = datetime.date.today()
+
+    with open(r"C:\Users\***\Desktop\%s_%s.csv"%(pt_name, today), "a",
+              encoding="utf-8-sig", newline='') as f:
+        
+        writer = csv.writer(f) 
+        writer.writerows(rows)
+        
+        
+def write_txt(file_name, content):
+
+    today = datetime.date.today()
+    
+    with open(r"C:\Users\***\Desktop\%s_%s.txt"%(file_name, today), "a",
+                  encoding="utf-8-sig", newline='') as f:
+        
+        f.write(content)
+
+
+def clean_word(text):
+    new = [i.replace(" ","").replace("\n","").replace("\r","") for i in text]
+    return new
+
+    
 def load_page_prox(url, data, headers, proxies):#, proxies
 
     response = requests.post(url, headers=headers, data=data, proxies=proxies)# , verify = False, proxies=proxies,
@@ -112,32 +138,6 @@ def load_page4(url, headers):
 
     #print(text)
     return text    
-    
-    
-def write(pt_name, rows):
-    
-    today = datetime.date.today()
-
-    with open(r"C:\Users\***\Desktop\%s_%s.csv"%(pt_name, today), "a",
-              encoding="utf-8-sig", newline='') as f:
-        
-        writer = csv.writer(f) 
-        writer.writerows(rows)
-        
-        
-def write_txt(file_name, content):
-
-    today = datetime.date.today()
-    
-    with open(r"C:\Users\***\Desktop\%s_%s.txt"%(file_name, today), "a",
-                  encoding="utf-8-sig", newline='') as f:
-        
-        f.write(content)
-
-
-def clean_word(text):
-    new = [i.replace(" ","").replace("\n","").replace("\r","") for i in text]
-    return new
 
 
 def temp():

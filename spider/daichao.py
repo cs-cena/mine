@@ -22,7 +22,7 @@ def read_csv(path):
         rows = []
         
         for row in read:          
-            rows.append(row[0])#不加[0]则是添加单个列表元素如[""]
+            rows.append(row)#[[],[]...] row[0] 第一列
     
     print("导入完成")
             

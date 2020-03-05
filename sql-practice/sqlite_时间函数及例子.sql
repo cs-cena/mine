@@ -1,3 +1,8 @@
+--计算时间差
+/*
+julianday(a.cre_dt) - julianday(b.act_dt) <= 30
+*/
+
 --查询各学生的年龄，只按年份来算
 /*
 SELECT st.sid, (strftime('%Y', "now") - strftime('%Y', st.Sage)) as age

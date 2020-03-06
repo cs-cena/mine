@@ -131,62 +131,84 @@ order by month
 #(当content中含有关键字'重置密码'时，该条记录为重置密码的记录)
 #结果： user_id | listing_id | month（发标月份）| 重置密码次数
 
-#mysql
+/*
+sql思路： 1 拿出用户 2 连接用户行为 3 聚合及筛选
+在拿用户时以及连表时限制时间
+*/
+
+
+   -- *拿出用户*
+   -- 实现cmn_listing 2017年11月至2018年1月发标用户
+create table test.test1 as
+select a.user_id, a.listing_id, a.cre_dt
+from cmn_listing a
+where a.cre_dt >= '2017-11-01' and a.cre_dt < '2018-02-01'
+
+   -- *连接用户修改密码的行为*
+   -- 实现 连表时用on加条件(保留不符合的，以备之后留下未修改密码的) 发标前一个月(求两个时间的差值) 改密码时间早于发标时间
+create table test.test2 as
+select a.*, case when b.content like '%重置密码%' then 1 else 0 end num
+from test.test1 a
+left join test.test2 b
+on a.user_id = b.user_id
+and datediff(a.cre_dt, b.act_dt) < 30
+and a.cre_dt > b.act_dt
+
+   -- *计数&筛选*
+   -- 实现 聚合 以及对聚合结果做筛选
+create table test.test3 as
 select 
-	a.substr(cre_dt,1,7) as month
 	,a.user_id
 	,a.listing_id
-	,sum(case when content like "重置密码" then 1 else 0 end) overwrite_ps_num
-from cmn_listing a 
-left join useractivity b
-on a.user_id = b.user_id
-on datediff(a.cre_dt, b.act_dt) <= 30
-group by month, user_id, listing_id
+	,substr(a.cre_dt,1,7) as month
+	,sum(num)
+from test.test2 a
+group by month, listing_id
+having num >= 2
 
 #sqlite
 select 
 	substr(a.cre_dt,1,7) as month
 	,a.user_id
 	,a.listing_id
-	,sum(case when content like "%重置密码%" then 1 else 0 end) overwrite_ps_num
+	,sum(case when content like "%重置密码%" then 1 else 0 end) num
+from cmn_listing a 
+left join useractivity b
+on a.user_id = b.user_id 
+where julianday(a.cre_dt) - julianday(b.act_dt) <= 30 #如果直接用where做筛选，则前一个月内没有改过密码的人就都被排除了
+and a.cre_dt > b.act_dt
+and a.cre_dt >= '2017-11-01' and a.cre_dt < '2018-02-01'
+having num >= 2
+
+#sqlite 更正
+select 	
+    a.user_id
+	,a.listing_id
+	,substr(a.cre_dt,1,7) as month
+	,sum(case when b.content like '%重置密码%' then 1 else 0 end)num
+from cmn_listing a
+left join useractivity b
+on a.user_id = b.user_id
+and julianday(a.cre_dt) - julianday(b.act_dt) <= 30
+and a.cre_dt > b.act_dt
+where a.cre_dt >= '2017-11-01' and a.cre_dt < '2018-02-01'
+group by month, a.user_id, listing_id
+having num >= 2
+
+#mysql
+select 
+	a.substr(cre_dt,1,7) as month
+	,a.user_id
+	,a.listing_id
+	,sum(case when content like "重置密码" then 1 else 0 end) num
 from cmn_listing a 
 left join useractivity b
 on a.user_id = b.user_id
-where julianday(a.cre_dt) - julianday(b.act_dt) <= 30
-group by month, a.user_id, a.listing_id
+and datediff(a.cre_dt,b.act_dt) <= 30
+and a.cre_dt > b.act_dt
+where a.cre_dt >= '2017-11-01' and a.cre_dt < '2018-02-01'
+group by month, user_id, listing_id
+having num >= 2
 
 #week1_思考题_2.1
-#sqlite
-SELECT 
-	a.user_id
-	,a.listing_id
-	,(CASE WHEN b.principal > 0 THEN 1 ELSE 0 END) AS is_success
-	,strftime("%Y-%m", a.cre_dt) AS fb_month
-	,c.newvalue
-FROM cmn_listing as a 
-left join listing_vintage as b 
-	on a.listing_id = b.listing_id
-left join ppdai_user_log_userupdateinfologs as c
-	on a.user_id = c.user_id
-	and a.cre_dt > "2017-11-01" and a.cre_dt < "2018-02-01"
-	and c.creationdate < a.cre_dt 
-	and lower(c.tablefield) like "%qq%"
-	and c.newvalue <> c.oldvalue
 
-#mysql
-SELECT 
-	a.user_id
-	,a.listing_id
-	,(CASE WHEN b.principal > 0 THEN 1 ELSE 0 END) AS is_success
-	,unix_timestamp(a.cre_dt,'yyyy-MM') AS fb_month
-	,c.newvalue
-FROM cmn_listing as a 
-left join listing_vintage as b 
-	on a.listing_id = b.listing_id
-left join ppdai_user_log_userupdateinfologs as c
-	on a.user_id = c.user_id
-	and a.cre_dt > unix_timestamp("2017-11-01 00:00:00") 
-	and a.cre_dt < unix_timestamp("2018-02-01 00:00:00")
-	and c.creationdate < a.cre_dt 
-	and lower(c.tablefield) like "%qq%"
-	and c.newvalue <> c.oldvalue

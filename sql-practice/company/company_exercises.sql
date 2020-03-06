@@ -210,5 +210,76 @@ where a.cre_dt >= '2017-11-01' and a.cre_dt < '2018-02-01'
 group by month, user_id, listing_id
 having num >= 2
 
-#week1_思考题_2.1
+#week1_练习题2_2.1
+--找出目标用户 限制时间
+create table test.fb_user as
+	select a.*
+	from cmn_listing a
+	where a.cre_dt >= "2017-11-01" and a.cre_dt < "2018-02-01"
+
+--连接成交表 可能单月单用户多次发标 on用listing_id
+create table test.borrow as
+	select 
+		a.*
+		,case when b.principal > 0 then 1 else 0 end is_success
+	from test.fb_user a 
+	left join listing_vintage b
+	on a.listing_id = b.listing_id
+
+--连接前台修改记录表 可能有的用户只填过一次只有newvalue 可能有的填了两次一样的
+create table test.change_qq as 
+	select
+		a.user_id
+		,a.listing_id
+		,a.is_success
+		,b.newvalue
+	from test.borrow a
+	left join ppdai_user_log_userupdateinfologs b
+	on a.user_id = b.user_id
+	and a.cre_dt > b.creationdate
+	and b.newvalue <> b.oldvalue
+	and lower(b.tablefield) like "%qq%"
+
+
+#整合
+create table test.change_qq as
+	select
+		a.user_id
+		,a.listing_id
+		,case when b.principal > 0 then 1 else 0 end is_success
+		,substr(a.cre_dt,1,7) month
+		,c.newvalue
+	from cmn_listing a
+	left join listing_vintage b
+	on a.listing_id = b.listing_id
+	left join ppdai_user_log_userupdateinfologs c
+	on a.user_id = c.user_id
+	and a.cre_dt > c.creationdate
+	and lower(c.tablefield) like "%qq%"
+	and c.newvalue <> c.oldvalue
+	where a.cre_dt >= "2017-11-01" and a.cre_dt < "2018-02-01"
+
+
+#week1_练习题2_2.2
+create table test.change_qq_times as 
+	select 
+		user_id
+		,listing_id
+		,month
+		,count(newvalue) num
+	from change_qq
+	group by user_id, listing_id
+	having num > 2
+
+
+#week1_练习题2_2.3
+create table test.overdue_rate as
+	select
+		month
+		,round(sum(b.duedate_30_op_pess30)/sum(b.principal),2) duedate_amount
+	from change_qq_times as a
+	left join listing_vintage as b
+	on a.listing_id = b.listing_id
+	group by month
+	order by month
 

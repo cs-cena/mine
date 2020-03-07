@@ -1,3 +1,8 @@
+#130503670401001
+#410823196608260022
+#41082319670205003X
+
+
 #week1_lecture_1 发标时间（cre_dt）在2017年
 year(cre_dt)
 cre_dt >= '2017-01-01' and cre_dt < '2018-01-01' 【不写时分秒会默认是00:00:00】
@@ -195,7 +200,7 @@ where a.cre_dt >= '2017-11-01' and a.cre_dt < '2018-02-01'
 group by month, a.user_id, listing_id
 having num >= 2
 
-#mysql
+#sql server
 select 
 	a.substr(cre_dt,1,7) as month
 	,a.user_id
@@ -283,3 +288,64 @@ create table test.overdue_rate as
 	group by month
 	order by month
 
+
+#week2_练习题1
+#创建一个外部表，文件路径为/external/aaa/a123/a.txt
+#内容(以,隔开):姓名,手机号,身份证号,QQ号
+#并计算统计数据,取出前10条,然后删除表
+create external table fqz.sjy_impala_test (
+name string comment '姓名',
+idnumber string comment '身份证号',
+mobilephone string comment '手机号',
+qq int comment 'QQ号'
+)
+
+-- [ROW FORMAT DELIMITED] 用来设置创建的表在加载数据的时候，支持的列分隔符
+-- [FIELDS TERMINATED BY] 设置字段与字段之间的分隔符
+-- [stored as] 存储为
+-- hive文件存储格式包括以下几类：
+-- 1、TEXTFILE 2、SEQUENCEFILE 3、RCFILE 4、ORCFILE(0.11以后出现) 5、PARQUET
+-- [COMPUTE STATS] 通过执行COMPUTE STATS来收集涉及到的所有表的统计信息,下面是例子 
+-- og_date    | #Rows   | #Files | Size     | Bytes Cached | Format
+-- 2014-12-13 | 9498438 | 2      | 469.76MB | NOT CACHED   | TEXT
+row format delimited field terminated by ','
+stored as textfile
+location '/external/aaa/a123';
+computer stats fqz.sjy_impala_test; -- 计算统计数据
+select * from fqz.sjy_impala_test limit 10;
+drop table if exists fqz.sjy_impala_test;
+
+#week2_练习题2
+#以第一题的用户(dinumber)去判断是否以被加欺诈（ods.fraud, 字段: idnumber, reason）
+#结果字段: 第一题所有字段, 是否欺诈, reason,当前年龄, 性别
+drop table if_exists test.whether_fraud
+create table test.whether_fraud as
+	#sql server
+	select
+		a.*
+		,case when b.idnumber IS NOT NULL then 1 else 0 end is_fruad
+		,b.reason
+		,case when length(a.idnumber) = 15 then floor((unix_timestamp(now()) - unix_timestamp(concat('19', substr(a.idnumber,7,6)),"YYYYMMDD"))/3600/24/365.25)
+			  else floor((unix_timestamp(now()) - unix_timestamp(substr(a.idnumber,7,8),"YYYYMMDD"))/3600/24/365.25)
+			  end age
+		,case when length(a.idnumber) = 15 then (case when cast(substr(a.idnumber,-2,1)) as intger) % 2 <> 0 then "男" else "女" end)
+			  when length(a.idnumber) = 18 then (case when cast(substr(a.idnumber,-2,1)) as intger) % 2 <> 0 then "男" else "女" end)
+ 			  end sexy
+	from fqz.sjy_impala_test a
+	left join ods.fraud b
+	on lower(a.idnumber) = lower(b.idnumber) #注意 x有大小写
+
+	#sqlite
+	select
+		a.*
+		,case when b.idnumber IS NOT NULL then 1 else 0 end is_fruad
+		,b.reason
+		,case when length(a.idnumber) = 15 then strftime('%Y', "now") - '19'||substr(a.idnumber,7,2)
+			  else strftime('%Y', "now") - substr(a.idnumber,7,4)
+			  end age
+		,case when length(a.idnumber) = 15 then (case when substr(a.idnumber,14,1) % 2 <> 0 then "男" else "女" end)
+			  when length(a.idnumber) = 18 then (case when substr(a.idnumber,16,1) % 2 <> 0 then "男" else "女" end)
+ 			  end sexy
+	from impala_test a
+	left join fqz_fraud b
+	on a.idnumber = b.idnumber

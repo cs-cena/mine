@@ -318,7 +318,7 @@ drop table if exists fqz.sjy_impala_test;
 #week2_练习题2
 #以第一题的用户(dinumber)去判断是否以被加欺诈（ods.fraud, 字段: idnumber, reason）
 #结果字段: 第一题所有字段, 是否欺诈, reason,当前年龄, 性别
-drop table if_exists test.whether_fraud
+drop table if exists test.whether_fraud
 create table test.whether_fraud as
 	#sql server
 	select
@@ -328,9 +328,15 @@ create table test.whether_fraud as
 		,case when length(a.idnumber) = 15 then floor((unix_timestamp(now()) - unix_timestamp(concat('19', substr(a.idnumber,7,6)),"YYYYMMDD"))/3600/24/365.25)
 			  else floor((unix_timestamp(now()) - unix_timestamp(substr(a.idnumber,7,8),"YYYYMMDD"))/3600/24/365.25)
 			  end age
+		#求性别 方法一 计算开销稍大一些
 		,case when length(a.idnumber) = 15 then (case when cast(substr(a.idnumber,-2,1)) as intger) % 2 <> 0 then "男" else "女" end)
 			  when length(a.idnumber) = 18 then (case when cast(substr(a.idnumber,-2,1)) as intger) % 2 <> 0 then "男" else "女" end)
  			  end sexy
+		#求性别 方法二 常用
+ 		,case when length(a.idnumber) = 18 and substr(a.idnumber,-2,1) in ('0','2','4','6','8') then "女"
+ 			  when length(a.idnumber) = 18 and substr(a.idnumber,-2,1) not in ('0','2','4','6','8') then "男"
+ 			  when length(a.idnumber) = 15 and substr(a.idnumber,-2,1) in ('0','2','4','6','8') then "女"
+ 			  else "男" end sexy
 	from fqz.sjy_impala_test a
 	left join ods.fraud b
 	on lower(a.idnumber) = lower(b.idnumber) #注意 x有大小写
@@ -349,3 +355,31 @@ create table test.whether_fraud as
 	from impala_test a
 	left join fqz_fraud b
 	on a.idnumber = b.idnumber
+
+#week2_练习题3
+drop table if exists test.stats_reason
+create table test.stats_reason as
+	select 
+		reason
+		,count(a.idnumber) as num
+	from whether_fraud a
+	where is_fruad = 1
+	group by reason
+	order by num DESC
+
+#week2_练习题4
+
+select
+	substr(cre_dt,1,7) as month
+	,listtype
+	,count(listing_id) as fbcs
+from ppdai_listing a
+where cre_dt >= '2017-06-01' and cre_dt < '2017-09-01'
+group by listtype
+
+
+
+
+
+
+

@@ -1,0 +1,147 @@
+作业：
+1. （1）2017年7-10月的发标用户，最后一次修改的qq
+    结果：userid | listingid | cre_dt | last_qq |
+   （2）计算发标前历史上曾经同这个qq的人数（排除用户本人）
+    结果：userid | listingid | cre_dt | last_qq | u2 |
+
+   发标表：edw.cmn_listing
+   字段： userid, listingid, cre_dt
+   前台修改记录表：ods.ppdai_user_log_userupdateinfologs 
+   字段：userid, creationdate(修改时间),newvalue(新值),oldvalue(旧值),tablefield
+   后台修改记录表：ods.ppdai_user_log_user_info_revise_history
+   字段：userid, creationdate(修改时间),newvalue(新值),oldvalue(旧值),tablefield
+1.（1）
+-- 拿出用户
+create table test.t1 as
+  select userid, listingid, cre_dt
+  from edw.cmn_listing
+  where cre_dt >= '2017-07-01' and cre_dt < '2017-11-01'
+
+ -- 连接前后台修改记录
+ create table test.t2 as
+   select a.userid, a.listingid, a.cre_dt, b.newvalue, b.creationdate
+   from edw.cmn_listing a
+   left join ods.ppdai_user_log_userupdateinfologs b 
+   on a.userid = b.userid 
+   and a.cre_dt > b.creationdate
+   and lower(b.tablefield) like '%qq%'
+   and b.oldvalue <> b.newvalue
+   union all
+   select a.userid, a.listingid, a.cre_dt, b.newvalue, b.creationdate
+   from edw.cmn_listing a
+   left join ods.ppdai_user_log_user_info_revise_history b 
+   on a.userid = b.userid 
+   and a.cre_dt > b.creationdate
+   and b.categoryid = 116
+   and b.oldvalue <> b.newvalue
+
+-- 排序，选出最后一次修改记录
+ create table test.t3 as
+  select userid, listingid, cre_dt, newvalue last_qq
+  from( 
+    select userid, listingid, cre_dt, newvalue, row_number()over(partition by listingid order by creationdate decs) num
+    from test.t2
+    ) a
+  where num = 1
+
+1.(2)
+-- 拿出历史上同qq的人
+ create table test.t4 as
+  select distinct a.*
+  from(
+    select a.userid, a.listingid, a.cre_dt, a.last_qq, b.userid u2
+    from test.t3 a
+    left join ods.ppdai_user_log_userupdateinfologs b 
+    on a.last_qq = b.newvalue
+    and a.cre_dt > b.creationdate
+    and lower(b.tablefield) like '%qq%'
+    and a.userid <> b.userid
+    union all
+    select a.userid, a.listingid, a.cre_dt, a.last_qq, b.userid u2
+    from test.t3 a
+    left join ods.ppdai_user_log_user_info_revise_history b 
+    on a.last_qq = b.newvalue
+    and a.cre_dt > b.creationdate
+    and b.tablefield = 116
+    and a.userid <> b.userid
+    ) a
+
+-- 计数
+ create table test.t5 as
+  select userid, listingid, cre_dt, last_qq, count(u2) u2
+  from test.t4
+  group by userid, listingid, cre_dt, last_qq
+
+
+
+2. （1）2017年7-10月的发标用户，发标前7天登入登出中含有可疑行为(description中含有关键字‘可疑行为’)的记录
+    结果：userid | listingid | cre_dt | description | 
+   （2）提取出所有可疑行为记录中的真实姓名和身份证号
+    结果：userid | listingid | cre_dt | realname | idnumber
+
+   发标表：edw.cmn_listing
+   字段： userid, listingid, cre_dt
+   用户活动记录表 ods.user_activity
+   字段：userid, description, creationdate
+   可疑行为记录样本：
+   '可疑行为: 该身份证号已经被认证过, 身份证为: ***, 真实姓名为: **, UserAgent 为: PPD-LoanApp/6.1.7 (vivo;vivo X20A;C29B219C72DD771684C165512CBCEC6B;Android/7.1.1'
+
+2.(1)
+-- 拿出可疑记录
+create table test.t6 as
+  select a.*, b.description
+  from test.t1 a
+  left join ods.user_activity b 
+  on a.userid = b.userid
+  and a.cre_dt > b.creationdate
+  and b.description like '%可疑行为%'
+  and datediff(a.cre_dt, b.creationdate) <= 7
+
+2.(2)
+-- 提取记录中的真实姓名和身份证号（用instr、substr）
+create table test.t7 as
+  select userid, listingid, cre_dt
+        ,substr(description, instr(description,'真实姓名为: ')+length('真实姓名为: '), instr(description,', UserAgent 为') - (instr(description,'真实姓名为: ')+length('真实姓名为: '))) realname
+        ,substr(description, instr(description,'身份证为: ')+length('身份证为: '), instr(description,', 真实姓名为:') - (instr(description,'身份证为:')+length('身份证为: '))) idnumber
+  from test.t6
+
+-- 用正则
+create table test.t7 as
+  select userid, listingid, cre_dt
+        ,regexp_extract(lower(description),'(^[0-9]*)([0-9]{15}|[0-9]{18}|[0-9]{17}x)(.*$)',2) idnumber
+        ,regexp_extract(description,
+          '(可疑行为: 该身份证号已经被认证过, 身份证为: )([0-9]{15}|[0-9]{18}|[0-9]{17}x)(, 真实姓名为: )(.*)(, UserAgent 为: PPD-LoanApp/6.1.7 (vivo;vivo X20A;C29B219C72DD771684C165512CBCEC6B;Android/7.1.1)',
+          4) realname
+  from test.t6
+
+
+
+3. （1）2017年7-10月的发标用户，发标前7天登入登出中含有可疑行为的记录的人是否存在历史同qq中
+    结果：u1| listingid | cre_dt | last_qq | u2 | whether_qq
+   （2）2017年7-10月的发标用户，出现这种情况的人数
+    结果：u1| listingid | cre_dt | renshu |
+
+    身份证用户名对应表 fqz.luanqibazao_ud_temp
+    字段: idnumber | userid 
+
+3.(1)
+-- 拿出可疑行为对应的用户
+create table test.t8 as
+  select a.userid u1, a.listingid, a.cre_dt, b.userid u2
+  from test.t7 a
+  inner join fqz.luanqibazao_ud_temp b 
+  on a.idnumber = b.idnumber
+
+-- 匹配有可疑行为的人是否在同qq中
+create table test.t9 as 
+  select a.u1, a.listingid, a.cre_dt, b.last_qq, a.u2
+        ,case when c.u2 is not null then 1 else 0 end as whether_qq
+  from test.t8 a
+  left join test.t4 b on a.u1 = b.userid
+  left join test.t4 c on a.u1 = c.userid and a.u2 = c.u2
+
+-- 计算人数
+create table test.t10 as
+  select u1, listingid, cre_dt, count(distinct u2)
+  from test.t9
+  group by u1, listingid, cre_dt

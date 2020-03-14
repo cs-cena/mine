@@ -2,7 +2,6 @@
 #410823196608260022
 #41082319670205003X
 
---思路顺序：先拿出目标客户，再连接他们的相关信息来排序和聚合；
 
 #week1_lecture_1 发标时间（cre_dt）在2017年
 year(cre_dt)
@@ -379,101 +378,8 @@ where cre_dt >= '2017-06-01' and cre_dt < '2017-09-01'
 group by listtype
 
 
-#week3_作业1.1
---取出用户
-create table targer_users as
-	select userid, listingid, cre_dt
-	from edw.cmn_listing a
-	where cre_dt >= '2017-07-01' and cre_dt < '2017-11-01'
-
---（有错误）合并两表,分组排序
-create table qq_infor as
-	select b.userid, b.listingid, b.cre_dt, a.creationdate, a.newvalue, row_number() OVER (PARTITION BY listingid ORDER BY creationdate DESC) rank
-	from ( 
-		#不加限制直接union all 可能会因为表太大 跑不动 应该先加条件
-		select userid, creationdate, newvalue
-		from ods.ppdai_user_log_userupdateinfologs
-
-		union all
-
-		select userid, creationdate, newvalue
-		from ods.ppdai_user_log_user_info_revise_history
-	) a
-	left join target_users b #错误 这样的话顺序错了 应该放前面 
-	on a.userid = b.userid
-	and b.cre_dt > a.creationdate
-
---筛选
-create table change_qq as
-	select a.userid, a.listingid, a.cre_dt, a.newvalue as last_qq
-	from qq_infor a
-	where a.rank = 1 
-
---订正
-
---取出用户
-create table targer_users as
-	select userid, listingid, cre_dt
-	from edw.cmn_listing a
-	where cre_dt >= '2017-07-01' and cre_dt < '2017-11-01'
-
---合并两表
-create table qq_infor as
-	select a.userid, a.listingid, a.cre_dt, b.newvalue, b.creationdate
-	from target_users a
-	left join ods.ppdai_user_log_userupdateinfologs b
-	on a.userid = b.userid
-	and lower(b.tablefield) like '%qq%'
-	and a.cre_dt > b.creationdate
-	and b.newvalue <> b.oldvalue
-
-	union all
-
-	select a.userid, a.listingid, a.cre_dt, b.newvalue, b.creationdate
-	from target_users a
-	left join ods.ppdai_user_log_user_info_revise_history b
-	on a.userid = b.userid
-	and b.categoryid = 116
-	and a.cre_dt > b.creationdate
-	and b.newvalue <> b.oldvalue
-
---排序，删选
-create table change_qq as 
-	select a.userid, a.listingid, a.cre_dt, a.newvalue last_qq
-	from (
-		select a.userid, a.listingid, a.cre_dt, a.newvalue, row_number() OVER (PARTITION BY listingid ORDER BY creationdate DESC) rank
-		from qq_infor a
-		) a
-	where num = 1
 
 
 
-#week3_作业1.2
---union all之前先各自加条件选完
-create table only_qq_infor as
-	select distinct a.* (	
-		select a.userid, a.listingid, a.cre_dt, a.last_qq, b.userid u2
-		from change_qq a
-		left join ods.ppdai_user_log_userupdateinfologs b
-		on a.last_qq = b.newvalue
-		and a.userid <> b.userid
-		and a.cre_dt > b.creationdate
-		and lower(b.tablefield) like '%qq%'
 
-		union all
 
-		select a.userid, a.listingid, a.cre_dt, a.last_qq, b.creationdate
-		from change_qq a
-		left join ods.ppdai_user_log_user_info_revise_history b
-		on a.last_qq = b.newvalue	
-		and a.cre_dt > b.creationdate
-		and b.newvalue <> b.oldvalue
-		and b.categoryid = 116
-	) a
-
-create table same_qq as
-	select userid, listingid, cre_dt, last_qq, count(userid) as u2
-	from only_qq_infor a
-	group by userid, listingid, cre_dt, last_qq
-
-#week3_作业2.1

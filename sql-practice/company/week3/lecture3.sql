@@ -461,7 +461,7 @@ create table test.t1 as
    用户活动记录表 ods.user_activity
    字段：userid, description, creationdate
    可疑行为记录样本：
-   '可疑行为: 该身份证号已经被认证过, 身份证为: 500221198402026113, 真实姓名为: 陶春, UserAgent 为: PPD-LoanApp/6.1.7 (vivo;vivo X20A;C29B219C72DD771684C165512CBCEC6B;Android/7.1.1'
+   '可疑行为: 该身份证号已经被认证过, 身份证为: ***, 真实姓名为: **, UserAgent 为: PPD-LoanApp/6.1.7 (vivo;vivo X20A;C29B219C72DD771684C165512CBCEC6B;Android/7.1.1'
 
 2.(1)
 -- 拿出可疑记录

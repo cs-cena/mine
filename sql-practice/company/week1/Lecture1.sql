@@ -105,7 +105,7 @@ if函数 if(condition, true, false)   例子: if(to_date(cre_dt) = to_date(creat
 	dazhuan   |  1
 
 七、1~13、16~21
-空格字符串函数 space(2) = '  '  
+ space(2) = '  '  
 重复字符串 repeat('ha'，3)  = 'hahaha'  
 首字符ascii函数 ascii(a) = 97
 左/右补足 lpad/rpad(字符，长度，补足字符)   = ('haha',6,'1') = '11haha'

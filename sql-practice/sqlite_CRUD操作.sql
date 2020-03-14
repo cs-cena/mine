@@ -6,10 +6,10 @@ sql执行顺序
 (5) group by(开始使用select中的别名，后面的语句中都可以使用)
 (6) 聚合 avg, sum, count
 (7) having 
-(8) select 
+(8) select
 (9) distinct 
 (10) order by 
-(11) top
+(11) top/limit
 
 
 /*

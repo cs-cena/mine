@@ -473,7 +473,53 @@ create table only_qq_infor as
 
 create table same_qq as
 	select userid, listingid, cre_dt, last_qq, count(userid) as u2
-	from only_qq_infor a
+	from only_qq_infor
 	group by userid, listingid, cre_dt, last_qq
 
 #week3_作业2.1
+create table target_users as
+	select userid, listingid, cre_dt
+	from edw.cmn_listing
+	where cre_dt >= '2017-07-01' and cre_dt < '2017-11-01'
+
+create table activity as
+	select a.userid, a.listingid, a.cre_dt, a.description
+	from target_users a
+	left join ods.user_activity b
+	on a.userid = b.userid
+	and a.cre_dt > b.creationdate
+	and datediff(a.cre_dt, b.creationdate) <= 7
+	and b.description like "可疑行为"
+
+#week3_作业2.2
+-- 提取记录中的真实姓名和身份证号（用instr、substr）
+create table id_name as
+  select userid, listingid, cre_dt
+        ,substr(description, instr(description,'真实姓名为: ')+length('真实姓名为: '), instr(description,', UserAgent 为') - (instr(description,'真实姓名为: ')+length('真实姓名为: '))) realname
+        ,substr(description, instr(description,'身份证为: ')+length('身份证为: '), instr(description,', 真实姓名为:') - (instr(description,'身份证为:')+length('身份证为: '))) idnumber
+	from activity
+
+--用正则
+create table id_name as
+	select 
+		a.userid, a.listingid, a.cre_dt,
+		,regexp_extract(lower(description), '(^[0-9]*)([0-9]{15}|[0-9]{18}|[0-9]{17}x)(.*$)',2) idnumber
+		,regexp_extract(description,
+          '(可疑行为: 该身份证号已经被认证过, 身份证为: )([0-9]{15}|[0-9]{18}|[0-9]{17}x)(, 真实姓名为: )(.*)(, UserAgent 为: PPD-LoanApp/6.1.7 (vivo;vivo X20A;C29B219C72DD771684C165512CBCEC6B;Android/7.1.1)',
+          4) realname
+	from activity
+
+
+#week3_作业3.1
+create table target_users as
+	select a.userid u1, a.listingid, a.cre_dt, b.userid u2
+	from id_name a
+	inner join fqz.luanqibazao_ud_temp b
+	on a.idnumber = b.idnumber
+
+--未完 搞不太懂逻辑关系
+create table doubt_same_qq as
+	select 
+	from target_users a
+	left join qq_infor b
+	on a.u2 = b.userid

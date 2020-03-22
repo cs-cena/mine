@@ -451,7 +451,8 @@ create table test.t1 as
 
 
 
-2. （1）2017年7-10月的发标用户，发标前7天登入登出中含有可疑行为(description中含有关键字‘可疑行为’)的记录
+2. （1）2017年7-10月的发标用户，发标前7天登入登出中
+    含有可疑行为(description中含有关键字‘可疑行为’)的记录
     结果：userid | listingid | cre_dt | description | 
    （2）提取出所有可疑行为记录中的真实姓名和身份证号
     结果：userid | listingid | cre_dt | realname | idnumber

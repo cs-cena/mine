@@ -2,15 +2,17 @@ sql执行顺序
 (1) from 
 (2) on
 (3) join  
-(4) where 
-(5) group by(开始使用select中的别名，后面的语句中都可以使用)
-(6) 聚合 avg, sum, count
-(7) having 
+(4) where（过滤行）
+(5) group by（除聚合语句外，select语句中的每一列都必须在group by子句中给出）
+(6) 聚合 avg, sum, count 
+(7) having（过滤分组，对分组聚合的值筛选）
 (8) select
 (9) distinct 
 (10) order by 
 (11) top/limit
 
+where 与 having 区别：
+where 在分组前过滤，having 在分组后过滤。而 where 先排除的行，不包括在后续分组中。
 
 /*
 sql时间函数：

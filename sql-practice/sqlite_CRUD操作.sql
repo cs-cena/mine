@@ -2,14 +2,22 @@ sql执行顺序
 (1) from 
 (2) on
 (3) join  
-(4) where 
-(5) group by(开始使用select中的别名，后面的语句中都可以使用)
-(6) 聚合 avg, sum, count
-(7) having 
+(4) where（过滤行）
+(5) group by（除聚合语句外，select语句中的每一列都必须在group by子句中给出）
+(6) 聚合 avg, sum, count 
+(7) having（过滤分组，对分组聚合的值筛选）
 (8) select
 (9) distinct 
 (10) order by 
 (11) top/limit
+
+where 与 having 区别：
+where 在连表后分组前过滤行，having 在分组后过滤分组。因此 where 先排除的行，不包括在后续分组中。
+
+left join ...on
+不管on中的条件如何写，left join 首先要得到左边的所有的行
+对于右边的表，如果满足连接条件，则输出值，如果不满足条件，则返回null
+也就是说，on中的过滤条件是作为左外连接的连接条件，而不是过滤条件。
 
 
 /*
